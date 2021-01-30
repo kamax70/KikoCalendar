@@ -1,0 +1,45 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <variable name="COMPONENT_NAME" value="kiko_calendar"/>
+    <variable name="PATTERN" value="%d %5p [%t] %c{40} - %m%n"/>
+
+    <appender name="syncstdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="syncFile" class="ch.qos.logback.core.FileAppender">
+        <file>log/${COMPONENT_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="stdout" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>1024</queueSize>
+        <appender-ref ref="syncstdout"/>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>1024</queueSize>
+        <appender-ref ref="syncFile"/>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </root>
+
+    <logger name="com.kiko.calendar" level="DEBUG" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="internal.core" level="DEBUG" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+</configuration>
